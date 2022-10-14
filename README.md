@@ -1,2 +1,3 @@
-# ItsSorceryFrameworkRimworld
-A general magic system mod for Rimworld
+# Its Sorcery!
+A general magic system framework built on RimWorld's Royalty DLC.
+
