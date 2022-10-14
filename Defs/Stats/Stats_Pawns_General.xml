@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	
+	<StatDef>
+		<defName>MaxEnergy_ItsSorcery</defName>
+		<label>maximum energy</label>
+		<description>The maximum energy availible to a pawn.</description>
+		<category>BasicsPawn</category>
+		<defaultBaseValue>50</defaultBaseValue>
+		<toStringStyle>FloatTwo</toStringStyle>
+		<showOnAnimals>false</showOnAnimals>
+		<displayPriorityInCategory>3500</displayPriorityInCategory>
+		<scenarioRandomizable>true</scenarioRandomizable>
+		<statFactors>
+			<li>EnergyFactor_ItsSorcery</li>
+		</statFactors>
+	</StatDef>
+	
+	<StatDef>
+		<defName>MinEnergy_ItsSorcery</defName>
+		<label>minimum energy</label>
+		<description>The minimum energy availible to a pawn.</description>
+		<category>BasicsPawn</category>
+		<defaultBaseValue>0</defaultBaseValue>
+		<toStringStyle>FloatTwo</toStringStyle>
+		<showOnAnimals>false</showOnAnimals>
+		<displayPriorityInCategory>3500</displayPriorityInCategory>
+		<scenarioRandomizable>true</scenarioRandomizable>
+	</StatDef>
+	
+	<StatDef>
+		<defName>EnergyRecovery_ItsSorcery</defName>
+		<label>energy recovery rate</label>
+		<description>The rate at which a pawn recovers energy per second.</description>
+		<category>BasicsPawn</category>
+		<defaultBaseValue>5</defaultBaseValue>
+		<toStringStyle>FloatTwo</toStringStyle>
+		<showOnAnimals>false</showOnAnimals>
+		<minValue>0</minValue>
+		<displayPriorityInCategory>3500</displayPriorityInCategory>
+		<scenarioRandomizable>true</scenarioRandomizable>
+		<statFactors>
+			<li>EnergyFactor_ItsSorcery</li>
+		</statFactors>
+	</StatDef>
+	
+	<StatDef>
+		<defName>EnergyFactor_ItsSorcery</defName>
+		<label>energy factor</label>
+		<description>A multiplier on energy recovery and maximum energy.</description>
+		<category>BasicsPawn</category>
+		<defaultBaseValue>1</defaultBaseValue>
+		<toStringStyle>FloatTwo</toStringStyle>
+		<showOnAnimals>false</showOnAnimals>
+		<minValue>0</minValue>
+		<displayPriorityInCategory>3500</displayPriorityInCategory>
+		<scenarioRandomizable>true</scenarioRandomizable>
+	</StatDef>
+	
+	<StatDef>
+		<defName>EnergyCostFactor_ItsSorcery</defName>
+		<label>energy factor</label>
+		<description>A multiplier on energy cost when using sorceries.</description>
+		<category>BasicsPawn</category>
+		<defaultBaseValue>1</defaultBaseValue>
+		<toStringStyle>PercentZero</toStringStyle>
+		<showOnAnimals>false</showOnAnimals>
+		<minValue>0</minValue>
+		<displayPriorityInCategory>3500</displayPriorityInCategory>
+		<scenarioRandomizable>true</scenarioRandomizable>
+	</StatDef>
+
+</Defs>

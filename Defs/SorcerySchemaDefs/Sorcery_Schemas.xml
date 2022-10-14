@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<ItsSorceryFramework.SorcerySchemaDef>
+		<defName>SorcerySchema_Base</defName>
+		<label>test magic system</label>
+	
+		<energyTrackerDef>EnergyTracker_BaseRPG</energyTrackerDef>
+	</ItsSorceryFramework.SorcerySchemaDef>
+
+</Defs>

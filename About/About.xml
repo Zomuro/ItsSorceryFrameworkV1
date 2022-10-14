@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>It's Sorcery!</name>
+	<author>Zomuro</author>
+	<supportedVersions><li>1.3</li></supportedVersions>
+	<modDependencies>
+	</modDependencies>
+	<packageId>Zomuro.ItsSorcery</packageId>
+	<description>A general framework for magic systems in RimWorld! It's Sorcery! offers a modular system that enables modders to more easily 
+design how magic works and is learned in game.</description>
+</ModMetaData>
