@@ -9,4 +9,12 @@
 		</value>
     </Operation>	
 	
+	<Operation Class="PatchOperationAdd"> 
+		<xpath>/Defs/ThingDef[@Name="BasePawn"]/inspectorTabs</xpath>
+		<order>Prepend</order>
+		<value>
+			<li>ItsSorceryFramework.ITab_Pawn_Schemas</li>
+		</value>
+    </Operation>	
+	
 </Patch>
