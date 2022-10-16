@@ -3,9 +3,16 @@
 
 	<ItsSorceryFramework.SorcerySchemaDef>
 		<defName>SorcerySchema_Base</defName>
-		<label>test magic system</label>
+		<label>Logos Experimentia</label>
 	
 		<energyTrackerDef>EnergyTracker_BaseRPG</energyTrackerDef>
+	</ItsSorceryFramework.SorcerySchemaDef>
+	
+	<ItsSorceryFramework.SorcerySchemaDef>
+		<defName>SorcerySchema_Base2</defName>
+		<label>Vex Sovereignty</label>
+	
+		<energyTrackerDef>EnergyTracker_BaseRPGTurnBased</energyTrackerDef>
 	</ItsSorceryFramework.SorcerySchemaDef>
 
 </Defs>

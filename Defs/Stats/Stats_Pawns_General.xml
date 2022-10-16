@@ -21,7 +21,8 @@
 		<label>minimum energy</label>
 		<description>The minimum energy availible to a pawn.</description>
 		<category>BasicsPawn</category>
-		<defaultBaseValue>0</defaultBaseValue>
+		<maxValue>0</maxValue>
+		<defaultBaseValue>-50</defaultBaseValue>
 		<toStringStyle>FloatTwo</toStringStyle>
 		<showOnAnimals>false</showOnAnimals>
 		<displayPriorityInCategory>3500</displayPriorityInCategory>
@@ -59,7 +60,7 @@
 	
 	<StatDef>
 		<defName>EnergyCostFactor_ItsSorcery</defName>
-		<label>energy factor</label>
+		<label>energy cost factor</label>
 		<description>A multiplier on energy cost when using sorceries.</description>
 		<category>BasicsPawn</category>
 		<defaultBaseValue>1</defaultBaseValue>

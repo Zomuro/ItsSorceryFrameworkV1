@@ -20,7 +20,20 @@
 		<energyMaxStatDef>MaxEnergy_ItsSorcery</energyMaxStatDef>
 		<energyMinStatDef>MinEnergy_ItsSorcery</energyMinStatDef>
 		<energyRecoveryStatDef>EnergyRecovery_ItsSorcery</energyRecoveryStatDef>
+		<overloadLimitFactor>0.5</overloadLimitFactor>
+	</ItsSorceryFramework.EnergyTrackerDef>
+	
+	<ItsSorceryFramework.EnergyTrackerDef Name = "EnergyTrackerBaseRPGTurnBased">
+		<energyTrackerClass>ItsSorceryFramework.EnergyTracker_RPGTurnBased</energyTrackerClass>
+		<defName>EnergyTracker_BaseRPGTurnBased</defName>
+		<label>energy tracker test RPG turn based</label>
 		
+		<energyMaxStatDef>MaxEnergy_ItsSorcery</energyMaxStatDef>
+		<energyMinStatDef>MinEnergy_ItsSorcery</energyMinStatDef>
+		<energyRecoveryStatDef>EnergyRecovery_ItsSorcery</energyRecoveryStatDef>
+		<overloadLimitFactor>0.5</overloadLimitFactor>
+		
+		<turnTicks>180</turnTicks>
 	</ItsSorceryFramework.EnergyTrackerDef>
 
 </Defs>

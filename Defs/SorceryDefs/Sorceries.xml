@@ -9,6 +9,7 @@
 	
 	<ItsSorceryFramework.SorceryDef Name="SorceryBase">
 		<abilityClass>ItsSorceryFramework.Sorcery</abilityClass>
+		<gizmoClass>ItsSorceryFramework.Command_Sorcery</gizmoClass>
 		<category>Sorcery</category>
 		<sorcerySchema>SorcerySchema_Base</sorcerySchema>
 		<defName>testsorcery</defName>
@@ -16,17 +17,17 @@
 		<description>its testing time</description>
 		<level>1</level>
 		<iconPath>UI/Abilities/Painblock</iconPath>
-		<hotKey>Misc1</hotKey>
+		<!--<hotKey>Misc1</hotKey>-->
 		
 		<statBases>
-			<Sorcery_EnergyCost>10</Sorcery_EnergyCost>
+			<Sorcery_EnergyCost>25</Sorcery_EnergyCost>
 			<Ability_Duration>120</Ability_Duration>
 		</statBases>
 		<verbProperties>		
 			<verbClass>Verb_CastAbility</verbClass>
 			<range>24.9</range>
 			<requireLineOfSight>True</requireLineOfSight>
-			<warmupTime>1</warmupTime>
+			<warmupTime>0.5</warmupTime>
 			<targetParams>
 				<canTargetBuildings>False</canTargetBuildings>
 				<canTargetAnimals>False</canTargetAnimals>
@@ -49,7 +50,7 @@
 		</comps>
 	</ItsSorceryFramework.SorceryDef>
 	
-	<ItsSorceryFramework.SorceryDef ParentName="SorceryBase">
+	<!--<ItsSorceryFramework.SorceryDef>
 		<abilityClass>ItsSorceryFramework.Sorcery</abilityClass>
 		<category>Sorcery</category>
 		<sorcerySchema>SorcerySchema_Base</sorcerySchema>
@@ -89,6 +90,6 @@
 				<fleckDef>PsycastPsychicEffect</fleckDef>
 			</li>
 		</comps>
-	</ItsSorceryFramework.SorceryDef>
+	</ItsSorceryFramework.SorceryDef>-->
   
 </Defs>
