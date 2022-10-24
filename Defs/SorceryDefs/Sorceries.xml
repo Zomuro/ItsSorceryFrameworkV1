@@ -16,7 +16,7 @@
 		<label>test</label>
 		<description>its testing time</description>
 		<level>1</level>
-		<iconPath>UI/Abilities/Painblock</iconPath>
+		<iconPath>UI/Sorceries/hea</iconPath>
 		<!--<hotKey>Misc1</hotKey>-->
 		
 		<statBases>
@@ -50,19 +50,42 @@
 		</comps>
 	</ItsSorceryFramework.SorceryDef>
 	
-	<!--<ItsSorceryFramework.SorceryDef>
+	<ItsSorceryFramework.SorceryDef ParentName="SorceryBase">
+		<defName>testsorcery2</defName>
+		<label>test2</label>
+		<description>its testing time</description>
+		<level>1</level>
+		<iconPath>UI/Sorceries/wou</iconPath>
+		<!--<hotKey>Misc1</hotKey>-->
+		
+		<statBases>
+			<Sorcery_EnergyCost>-25</Sorcery_EnergyCost>
+			<Ability_Duration>120</Ability_Duration>
+		</statBases>
+	</ItsSorceryFramework.SorceryDef>
+	
+	<ItsSorceryFramework.SorceryDef ParentName="SorceryBase">
+		<defName>testsorcery3</defName>
+		<label>test3</label>
+		<description>its testing time</description>
+		<level>1</level>
+		<iconPath>UI/Sorceries/res</iconPath>
+		<!--<hotKey>Misc1</hotKey>-->
+	</ItsSorceryFramework.SorceryDef>
+	
+	<ItsSorceryFramework.SorceryDef>
 		<abilityClass>ItsSorceryFramework.Sorcery</abilityClass>
 		<category>Sorcery</category>
-		<sorcerySchema>SorcerySchema_Base</sorcerySchema>
-		<defName>testsorcery2</defName>
-		<label>pulsar</label>
+		<sorcerySchema>SorcerySchema_Base3</sorcerySchema>
+		<defName>testsorcery4</defName>
+		<label>test2</label>
 		<description>its testing time</description>
 		<level>1</level>
 		<iconPath>UI/Abilities/Painblock</iconPath>
 		<hotKey>Misc1</hotKey>
 		
 		<statBases>
-			<Sorcery_EnergyCost>20</Sorcery_EnergyCost>
+			<Sorcery_EnergyCost>26</Sorcery_EnergyCost>
 			<Ability_Duration>120</Ability_Duration>
 		</statBases>
 		<verbProperties>		
@@ -90,6 +113,6 @@
 				<fleckDef>PsycastPsychicEffect</fleckDef>
 			</li>
 		</comps>
-	</ItsSorceryFramework.SorceryDef>-->
+	</ItsSorceryFramework.SorceryDef>
   
 </Defs>
