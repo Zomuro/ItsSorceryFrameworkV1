@@ -13,6 +13,10 @@ namespace ItsSorceryFramework
     {
         public static SorcerySchemaDef SorcerySchema_Base;
         public static SorcerySchemaDef SorcerySchema_Base2;
+        public static SorcerySchemaDef SorcerySchema_Base3;
+        public static SorcerySchemaDef SorcerySchema_Base4;
+        public static SorcerySchemaDef SorcerySchema_Base5;
+        public static SorcerySchemaDef SorcerySchema_Base6;
 
         static SorcerySchemaDefOf()
         {

@@ -30,16 +30,13 @@ namespace ItsSorceryFramework
         public static SorcerySchema FindSorcerySchema(Pawn pawn, SorceryDef def)
         {
             Comp_ItsSorcery comp = pawn.TryGetComp<Comp_ItsSorcery>();
-
-            /*if (comp != null)
-            {
-                return comp.schemaTracker.sorcerySchemas.FirstOrDefault(s => s.def == def.sorcerySchema);
-            }
-
-            return null;*/
-
-
             return comp?.schemaTracker?.sorcerySchemas.FirstOrDefault(s => s.def == def.sorcerySchema);
+        }
+
+        public static SorcerySchema FindSorcerySchema(Pawn pawn, SorcerySchemaDef def)
+        {
+            Comp_ItsSorcery comp = pawn.TryGetComp<Comp_ItsSorcery>();
+            return comp?.schemaTracker?.sorcerySchemas.FirstOrDefault(s => s.def == def);
         }
 
     }

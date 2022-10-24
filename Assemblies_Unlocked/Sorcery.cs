@@ -45,11 +45,12 @@ namespace ItsSorceryFramework
             EnergyTracker energyTracker = SorcerySchemaUtility.FindSorcerySchema(pawn, sorceryDef).energyTracker;
             if (energyTracker == null) return false;
 
-            if (!energyTracker.TryAlterEnergy(sorceryDef.EnergyCost))
+            float finalEnergyCost = sorceryDef.EnergyCost * energyTracker.EnergyCostFactor;
+            if (!energyTracker.TryAlterEnergy(finalEnergyCost, sorceryDef))
             {
                 return false;
             }
-            Log.Message("cast: " + sorceryDef.EnergyCost.ToString());
+            Log.Message("cast: " + (sorceryDef.EnergyCost * energyTracker.EnergyCostFactor).ToString());
             return base.Activate(target, dest);
         }
 

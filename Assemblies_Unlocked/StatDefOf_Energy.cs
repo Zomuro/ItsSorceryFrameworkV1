@@ -16,6 +16,7 @@ namespace ItsSorceryFramework
         public static StatDef EnergyRecovery_ItsSorcery;
         public static StatDef EnergyFactor_ItsSorcery;
         public static StatDef EnergyCostFactor_ItsSorcery;
+        public static StatDef CastFactor_ItsSorcery;
 
         public static StatDef Sorcery_EnergyCost;
         public static StatDef Sorcery_MaxCasts;

@@ -32,7 +32,9 @@ namespace ItsSorceryFramework
 			//yield return  "Schema : " + this.sorcerySchema.label.CapitalizeFirst();
 			if (this.EnergyCost != 0)
 			{
-				yield return this.sorcerySchema.energyTrackerDef.energyStatLabel.CapitalizeFirst() + ": "+ this.EnergyCost;
+				EnergyTracker energyTracker = SorcerySchemaUtility.FindSorcerySchema(forPawn, this).energyTracker;
+				yield return this.sorcerySchema.energyTrackerDef.energyStatLabel.CapitalizeFirst() + ": "+ 
+					Math.Round(this.EnergyCost * energyTracker.EnergyCostFactor, 2);
 			}
 			if (this.verbProperties.warmupTime > 1.401298E-45f)
 			{
@@ -55,7 +57,7 @@ namespace ItsSorceryFramework
 		{
 			if (this.cachedTooltip == null || this.cachedTooltipPawn != pawn)
 			{
-				this.cachedTooltip = this.LabelCap + "\n" + this.sorcerySchema.label.CapitalizeFirst() + 
+				this.cachedTooltip = this.LabelCap.Colorize(ColoredText.TipSectionTitleColor) + "\n" + this.sorcerySchema.label.CapitalizeFirst() + 
 					((this.level > 0) ? ("\n" + "Level".Translate().CapitalizeFirst() + " " + this.level) : "") + 
 					"\n\n" +this.description;
 				this.cachedTooltipPawn = pawn;
