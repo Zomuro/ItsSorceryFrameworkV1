@@ -69,6 +69,38 @@ namespace ItsSorceryFramework
             }
         }
 
+        public virtual float OverBarFactor
+        {
+            get
+            {
+                return 0.5f;
+            }
+        }
+
+        public virtual float OverBarLossFactor
+        {
+            get
+            {
+                return 1f;
+            }
+        }
+
+        public virtual float MaxEnergyOverload
+        {
+            get
+            {
+                return MaxEnergy * (1f + OverBarFactor);
+            }
+        }
+
+        public virtual int TurnTicks
+        {
+            get
+            {
+                return 60;
+            }
+        }
+
         public virtual void EnergyTrackerTick()
         {
             
@@ -82,7 +114,8 @@ namespace ItsSorceryFramework
             }
         }
 
-        public virtual float EnergyToRelativeValue()
+
+        public virtual float EnergyToRelativeValue(float energyCost = 0)
         {
             return 0f;
         }
@@ -118,6 +151,46 @@ namespace ItsSorceryFramework
 
         }
 
+        public virtual void HightlightEnergyCost(Rect rec)
+        {
+
+        }
+
+        public int findFloor(float relVal, bool neg = true)
+        {
+            if (neg)
+            {
+                if (relVal < 0) return -1;
+                else if (relVal > 1) return 1;
+            }
+            else
+            {
+                if (relVal < 0) return -1;
+                else if (relVal >= 1) return 1;
+            }
+            return 0;
+        }
+
+        public float normalizeVal(float relVal, bool neg = true)
+        {
+            if (neg)
+            {
+                if (relVal < 0) return relVal + 1;
+                else if (relVal > 1) return relVal - 1;
+            }
+            else
+            {
+                if (relVal < 0) return relVal + 1;
+                else if (relVal >= 1) return relVal - 1;
+            }
+            return relVal;
+        }
+
+        public virtual string TopRightLabel(SorceryDef sorceryDef)
+        {
+            return "";
+        }
+
         public override string ToString()
         {
             return "Energy class: "+ this.GetType().Name.ToString();
@@ -131,6 +204,6 @@ namespace ItsSorceryFramework
 
         public float currentEnergy;
 
-        
+        public bool limitLocked = true;
     }
 }

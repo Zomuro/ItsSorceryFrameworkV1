@@ -32,10 +32,10 @@ namespace ItsSorceryFramework
 				{
 					schemaTracker.sorcerySchemas.Add(SorcerySchemaUtility.InitializeSorcerySchema(pawn, SorcerySchemaDefOf.SorcerySchema_Base));
 					schemaTracker.sorcerySchemas.Add(SorcerySchemaUtility.InitializeSorcerySchema(pawn, SorcerySchemaDefOf.SorcerySchema_Base2));
-					//schemaTracker.sorcerySchemas.Add(SorcerySchemaUtility.InitializeSorcerySchema(pawn, SorcerySchemaDefOf.SorcerySchema_Base));
-					//schemaTracker.sorcerySchemas.Add(SorcerySchemaUtility.InitializeSorcerySchema(pawn, SorcerySchemaDefOf.SorcerySchema_Base));
-					//schemaTracker.sorcerySchemas.Add(SorcerySchemaUtility.InitializeSorcerySchema(pawn, SorcerySchemaDefOf.SorcerySchema_Base));
-					//schemaTracker.sorcerySchemas.Add(SorcerySchemaUtility.InitializeSorcerySchema(pawn, SorcerySchemaDefOf.SorcerySchema_Base));
+					schemaTracker.sorcerySchemas.Add(SorcerySchemaUtility.InitializeSorcerySchema(pawn, SorcerySchemaDefOf.SorcerySchema_Base3));
+					schemaTracker.sorcerySchemas.Add(SorcerySchemaUtility.InitializeSorcerySchema(pawn, SorcerySchemaDefOf.SorcerySchema_Base4));
+					schemaTracker.sorcerySchemas.Add(SorcerySchemaUtility.InitializeSorcerySchema(pawn, SorcerySchemaDefOf.SorcerySchema_Base5));
+					schemaTracker.sorcerySchemas.Add(SorcerySchemaUtility.InitializeSorcerySchema(pawn, SorcerySchemaDefOf.SorcerySchema_Base6));
 				}
 				
 			}

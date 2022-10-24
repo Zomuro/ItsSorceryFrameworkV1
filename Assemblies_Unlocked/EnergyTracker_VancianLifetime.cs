@@ -9,19 +9,17 @@ using Verse;
 
 namespace ItsSorceryFramework
 {
-    public class EnergyTracker_Vancian : EnergyTracker
+    public class EnergyTracker_VancianLifetime : EnergyTracker_Vancian
     {
         // initalizer- created via activator via SorcerySchema
-        public EnergyTracker_Vancian(Pawn pawn, EnergyTrackerDef def) : base(pawn, def)
+        public EnergyTracker_VancianLifetime(Pawn pawn, EnergyTrackerDef def) : base(pawn, def)
         {
-            InitalizeSorceries();
-            tickCount = def.refreshTicks;
+            currentEnergy = MaxCasts;
         }
 
-        public EnergyTracker_Vancian(Pawn pawn, SorcerySchemaDef def) : base(pawn, def)
+        public EnergyTracker_VancianLifetime(Pawn pawn, SorcerySchemaDef def) : base(pawn, def)
         {
-            InitalizeSorceries();
-            tickCount = this.def.refreshTicks;
+            currentEnergy = MaxCasts;
         }
 
         public override void ExposeData()
@@ -31,21 +29,35 @@ namespace ItsSorceryFramework
             Scribe_Values.Look(ref tickCount, "tickCount");
         }
 
-        public virtual void InitalizeSorceries()
-        {
-            foreach(SorceryDef sd in from sorceryDef in DefDatabase<SorceryDef>.AllDefs 
-                                     where sorceryDef.sorcerySchema.energyTrackerDef == def
-                                     select sorceryDef)
-            {
-                if(!vancianCasts.ContainsKey(sd)) vancianCasts.Add(sd, (int) Math.Ceiling(sd.MaximumCasts * CastFactor));
-            }
-        }
-
-        public virtual float CastFactor
+        /*public virtual int RefreshTick
         {
             get
             {
-                return this.pawn.GetStatValue(def.CastFactorStatDef ?? StatDefOf_ItsSorcery.CastFactor_ItsSorcery, true);
+                return def.refreshTicks % 60000;
+            }
+        }*/
+
+        public virtual int MaxCasts
+        {
+            get
+            {
+                return (int) this.pawn.GetStatValue(def.energyMaxStatDef ?? StatDefOf_ItsSorcery.MaxEnergy_ItsSorcery, true);
+            }
+        }
+
+        public virtual int CastRecoveryRate
+        {
+            get
+            {
+                return (int) this.pawn.GetStatValue(def.energyRecoveryStatDef ?? StatDefOf_ItsSorcery.EnergyRecovery_ItsSorcery, true);
+            }
+        }
+
+        public virtual int currentCasts
+        {
+            get
+            {
+                return (int)currentEnergy;
             }
         }
 
@@ -56,23 +68,15 @@ namespace ItsSorceryFramework
                 tickCount--;
                 if(tickCount == 0)
                 {
-                    tickCount = this.def.refreshTicks;
-                    this.RefreshAllCasts();
+                    tickCount = def.refreshTicks;
+                    currentEnergy = Math.Max(0, Math.Min(currentCasts + CastRecoveryRate, MaxCasts));
                 }
-            }
-        }
-
-        public virtual void RefreshAllCasts()
-        {
-            foreach (var sorceryPair in vancianCasts)
-            {
-                vancianCasts[sorceryPair.Key] = (int) Math.Ceiling(sorceryPair.Key.MaximumCasts * CastFactor);
             }
         }
 
         public override bool WouldReachLimitEnergy(float energyCost, SorceryDef sorceryDef = null)
         {
-            if (vancianCasts[sorceryDef] <= 0) return true;
+            if (currentCasts <= 0) return true;
             return false;
         }
 
@@ -80,7 +84,7 @@ namespace ItsSorceryFramework
         {
             if (!WouldReachLimitEnergy(energyCost, sorceryDef))
             {
-                vancianCasts[sorceryDef]--;
+                currentEnergy--;
                 return true;
             }
             
@@ -100,8 +104,13 @@ namespace ItsSorceryFramework
 
             Text.Font = GameFont.Small;
             Text.Anchor = TextAnchor.MiddleCenter;
+
+
             Widgets.Label(rect, def.TranslatedRefreshNotif.Translate(GenDate.ToStringTicksToPeriod(tickCount)));
-            
+
+            Text.Anchor = TextAnchor.LowerCenter;
+            Widgets.Label(rect, def.TranslatedCastsCount.Translate(currentCasts, MaxCasts));
+
             Text.Anchor = TextAnchor.UpperLeft;
         }
 
@@ -112,9 +121,7 @@ namespace ItsSorceryFramework
                 ((int) Math.Ceiling(sorceryDef.MaximumCasts * this.CastFactor)).ToString();
         }
 
-        public Dictionary<SorceryDef, int> vancianCasts = new Dictionary<SorceryDef, int> ();
-
-        public int tickCount = 0;
+        
 
     }
 }

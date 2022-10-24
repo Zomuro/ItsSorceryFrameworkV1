@@ -9,14 +9,14 @@ using UnityEngine;
 
 namespace ItsSorceryFramework
 {
-    public class EnergyTracker_RPGTurnBased : EnergyTracker_RPG
+    public class EnergyTracker_InvertedTurnBased : EnergyTracker_RPG
     {
         // initalizer- created via activator via SorcerySchema
-        public EnergyTracker_RPGTurnBased(Pawn pawn, EnergyTrackerDef def) : base(pawn, def)
+        public EnergyTracker_InvertedTurnBased(Pawn pawn, EnergyTrackerDef def) : base(pawn, def)
         {
         }
 
-        public EnergyTracker_RPGTurnBased(Pawn pawn, SorcerySchemaDef def) : base(pawn, def)
+        public EnergyTracker_InvertedTurnBased(Pawn pawn, SorcerySchemaDef def) : base(pawn, def)
         {
         }
 
@@ -37,14 +37,20 @@ namespace ItsSorceryFramework
         {
             if (Find.TickManager.TicksGame % TurnTicks == 0)
             {
-                if (currentEnergy <= MaxEnergy) // when energy is under or equal the normal max
+                if (currentEnergy < 0) // when energy below 0
                 {
-                    float tempEnergy = Math.Min(currentEnergy + EnergyRecoveryRate, MaxEnergy);
+                    float tempEnergy = Math.Min(currentEnergy + 1.TicksToSeconds() * EnergyRecoveryRate,
+                        0);
                     this.currentEnergy = Math.Max(tempEnergy, MinEnergy);
+                }
+                else if (currentEnergy <= MaxEnergy) // when energy is under or equal the normal max
+                {
+                    float tempEnergy = Math.Min(currentEnergy - 1.TicksToSeconds() * EnergyRecoveryRate, MaxEnergy);
+                    this.currentEnergy = Math.Max(tempEnergy, 0);
                 }
                 else // when energy is over the normal max
                 {
-                    float tempEnergy = Math.Min(currentEnergy - EnergyRecoveryRate * OverBarLossFactor,
+                    float tempEnergy = Math.Min(currentEnergy - 1.TicksToSeconds() * EnergyRecoveryRate * OverBarLossFactor,
                         MaxEnergyOverload);
                     this.currentEnergy = Math.Max(tempEnergy, MinEnergy);
                 }
@@ -83,7 +89,7 @@ namespace ItsSorceryFramework
             if (this.EnergyRelativeValue < 0)
             {
                 Widgets.FillableBar(barBox, Mathf.Min(this.EnergyRelativeValue + 1, 1f),
-                    GizmoTextureUtility.EmptyBarTex, GizmoTextureUtility.UnderBarTex, true);
+                    GizmoTextureUtility.EmptyBarTex, GizmoTextureUtility.OverBarTex, true);
             }
             else if (this.EnergyRelativeValue <= 1)
             {
@@ -93,7 +99,7 @@ namespace ItsSorceryFramework
             else
             {
                 Widgets.FillableBar(barBox, Mathf.Min((this.EnergyRelativeValue - 1f) / (MaxEnergyOverload / MaxEnergy - 1), 1f),
-                    GizmoTextureUtility.OverBarTex, 
+                    GizmoTextureUtility.UnderBarTex,
                     GizmoTextureUtility.BarTex, true);
             }
 

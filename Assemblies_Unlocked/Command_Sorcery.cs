@@ -27,7 +27,7 @@ namespace ItsSorceryFramework
 			Log.Message((energyTracker.currentEnergy - def.EnergyCost).ToString());
 			Log.Message((energyTracker.WouldReachLimitEnergy(def.EnergyCost)).ToString());*/
 
-			if (energyTracker.WouldReachLimitEnergy(def.EnergyCost))
+			if (energyTracker.WouldReachLimitEnergy(def.EnergyCost, def))
             {
 				base.DisableWithReason(energyTracker.DisableCommandReason().Translate(pawn.NameFullColored));
 				// base.DisableWithReason(eg.DisableCommandReason().Translate(def));
@@ -50,14 +50,16 @@ namespace ItsSorceryFramework
 			get
 			{
 				SorceryDef def = (this.ability as Sorcery)?.sorceryDef;
+				EnergyTracker energyTracker = SorcerySchemaUtility.FindSorcerySchema(this.ability.pawn, def).energyTracker;
 				string text = "";
-				text += (def?.sorcerySchema.energyTrackerDef.energyStatLabel.CapitalizeFirst()[0]) + ": " + def.EnergyCost.ToString();
+				/*text += (def?.sorcerySchema.energyTrackerDef.energyStatLabel.CapitalizeFirst()[0]) + ": " + 
+					Math.Round(def.EnergyCost * energyTracker.EnergyCostFactor, 2).ToString();*/
 				//text = "R";
+				text += energyTracker.TopRightLabel(def);
+
 				return text.TrimEndNewlines();
 			}
 		}
-
-		
 
 	}
 }
