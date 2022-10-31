@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-	<StatCategoryDef>
-		<defName>Sorcery</defName>
-		<label>Sorcery</label>
-		<displayOrder>60</displayOrder>
-	</StatCategoryDef>
-	
 	<StatDef>
 		<defName>Sorcery_EnergyCost</defName>
 		<label>energy cost</label>
@@ -22,7 +16,7 @@
 		<label>maximum casts</label>
 		<category>Sorcery</category>
 		<description>The number of times a sorcery can be casted in a certain timeframe.</description>
-		<defaultBaseValue>0</defaultBaseValue>
+		<defaultBaseValue>1</defaultBaseValue>
 		<showIfUndefined>false</showIfUndefined>
 		<displayPriorityInCategory>1</displayPriorityInCategory>
 		<statFactors>

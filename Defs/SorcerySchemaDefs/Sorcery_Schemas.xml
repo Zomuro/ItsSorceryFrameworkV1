@@ -42,5 +42,12 @@
 	
 		<energyTrackerDef>EnergyTracker_BaseConsumable</energyTrackerDef>
 	</ItsSorceryFramework.SorcerySchemaDef>
+	
+	<ItsSorceryFramework.SorcerySchemaDef>
+		<defName>SorcerySchema_Base7</defName>
+		<label>The Waiting Game</label>
+	
+		<energyTrackerDef>EnergyTracker_BaseCooldown</energyTrackerDef>
+	</ItsSorceryFramework.SorcerySchemaDef>
 
 </Defs>

@@ -20,7 +20,7 @@
 		<energyMaxStatDef>MaxEnergy_ItsSorcery</energyMaxStatDef>
 		<energyMinStatDef>MinEnergy_ItsSorcery</energyMinStatDef>
 		<energyRecoveryStatDef>EnergyRecovery_ItsSorcery</energyRecoveryStatDef>
-		<overBarFactor>0.5</overBarFactor>
+		
 		<sideEffect>test2hediff</sideEffect>
 	</ItsSorceryFramework.EnergyTrackerDef>
 	
@@ -32,7 +32,6 @@
 		<energyMaxStatDef>MaxEnergy_ItsSorcery</energyMaxStatDef>
 		<energyMinStatDef>MinEnergy_ItsSorcery</energyMinStatDef>
 		<energyRecoveryStatDef>EnergyRecovery_ItsSorcery</energyRecoveryStatDef>
-		<overBarFactor>0.5</overBarFactor>
 		
 		<turnTicks>180</turnTicks>
 	</ItsSorceryFramework.EnergyTrackerDef>
@@ -45,7 +44,7 @@
 		<energyMaxStatDef>MaxEnergy_ItsSorcery</energyMaxStatDef>
 		<energyMinStatDef>MinEnergy_ItsSorcery</energyMinStatDef>
 		<energyRecoveryStatDef>EnergyRecovery_ItsSorcery</energyRecoveryStatDef>
-		<overBarFactor>0.5</overBarFactor>
+		
 	</ItsSorceryFramework.EnergyTrackerDef>
 	
 	<ItsSorceryFramework.EnergyTrackerDef Name = "EnergyTrackerBaseVancian">
@@ -53,7 +52,7 @@
 		<defName>EnergyTracker_BaseVancian</defName>
 		<label>energy tracker test vancian</label>
 		
-		<refreshTicks>60000</refreshTicks>
+		<refreshTicks>1500</refreshTicks>
 	</ItsSorceryFramework.EnergyTrackerDef>
 	
 	<ItsSorceryFramework.EnergyTrackerDef Name = "EnergyTrackerBaseVancianLifetime">
@@ -63,7 +62,7 @@
 		
 		<energyMaxStatDef>MaxEnergy_ItsSorcery</energyMaxStatDef>
 		<energyRecoveryStatDef>EnergyRecovery_ItsSorcery</energyRecoveryStatDef>
-		<refreshTicks>60000</refreshTicks>
+		<refreshTicks>1500</refreshTicks>
 	</ItsSorceryFramework.EnergyTrackerDef>
 	
 	<ItsSorceryFramework.EnergyTrackerDef Name = "EnergyTrackerBaseConsumable">
@@ -73,7 +72,7 @@
 		
 		<energyMaxStatDef>MaxEnergy_ItsSorcery</energyMaxStatDef>
 		<energyRecoveryStatDef>EnergyRecovery_ItsSorcery</energyRecoveryStatDef>
-		<refreshTicks>60000</refreshTicks>
+		<refreshTicks>3000</refreshTicks>
 		<sorceryAmmoDict>
 			<li>
 				<key>Milk</key>
@@ -84,6 +83,16 @@
 				<value>10.0</value>
 			</li>
 		</sorceryAmmoDict>
+	</ItsSorceryFramework.EnergyTrackerDef>
+	
+	<ItsSorceryFramework.EnergyTrackerDef Name = "EnergyTrackerBaseCooldown">
+		<energyTrackerClass>ItsSorceryFramework.EnergyTracker_Cooldown</energyTrackerClass>
+		<defName>EnergyTracker_BaseCooldown</defName>
+		<label>energy tracker test cooldown</label>
+		
+		<energyMaxStatDef>MaxEnergy_ItsSorcery</energyMaxStatDef>
+		<energyRecoveryStatDef>EnergyRecovery_ItsSorcery</energyRecoveryStatDef>
+		<refreshTicks>180</refreshTicks>
 	</ItsSorceryFramework.EnergyTrackerDef>
 
 

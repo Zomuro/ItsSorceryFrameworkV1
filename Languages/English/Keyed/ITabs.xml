@@ -6,4 +6,6 @@
 	<EnergyTrackerVancianRefresh_ItsSorcery>Refresh casts in: {0}</EnergyTrackerVancianRefresh_ItsSorcery>
 	<EnergyTrackerVancianCastsLeft_ItsSorcery>Casts left: {0}/{1}</EnergyTrackerVancianCastsLeft_ItsSorcery>
 	
+	<EnergyTrackerCooldown_ItsSorcery>End schema cooldown in: {0}</EnergyTrackerCooldown_ItsSorcery>
+	
 </LanguageData>

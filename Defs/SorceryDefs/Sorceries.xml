@@ -11,7 +11,7 @@
 		<abilityClass>ItsSorceryFramework.Sorcery</abilityClass>
 		<gizmoClass>ItsSorceryFramework.Command_Sorcery</gizmoClass>
 		<category>Sorcery</category>
-		<sorcerySchema>SorcerySchema_Base</sorcerySchema>
+		<sorcerySchema>SorcerySchema_Base4</sorcerySchema>
 		<defName>testsorcery</defName>
 		<label>test</label>
 		<description>its testing time</description>
@@ -22,6 +22,7 @@
 		<statBases>
 			<Sorcery_EnergyCost>25</Sorcery_EnergyCost>
 			<Ability_Duration>120</Ability_Duration>
+			<Sorcery_MaxCasts>5</Sorcery_MaxCasts>
 		</statBases>
 		<verbProperties>		
 			<verbClass>Verb_CastAbility</verbClass>
@@ -73,12 +74,12 @@
 		<!--<hotKey>Misc1</hotKey>-->
 	</ItsSorceryFramework.SorceryDef>
 	
-	<ItsSorceryFramework.SorceryDef>
+	<!--<ItsSorceryFramework.SorceryDef>
 		<abilityClass>ItsSorceryFramework.Sorcery</abilityClass>
 		<category>Sorcery</category>
-		<sorcerySchema>SorcerySchema_Base3</sorcerySchema>
+		<sorcerySchema>SorcerySchema_Base7</sorcerySchema>
 		<defName>testsorcery4</defName>
-		<label>test2</label>
+		<label>test4</label>
 		<description>its testing time</description>
 		<level>1</level>
 		<iconPath>UI/Abilities/Painblock</iconPath>
@@ -113,6 +114,6 @@
 				<fleckDef>PsycastPsychicEffect</fleckDef>
 			</li>
 		</comps>
-	</ItsSorceryFramework.SorceryDef>
+	</ItsSorceryFramework.SorceryDef>-->
   
 </Defs>
