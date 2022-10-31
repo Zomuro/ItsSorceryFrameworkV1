@@ -104,6 +104,7 @@ namespace ItsSorceryFramework
                 new HarmonyMethod(typeof(HarmonyPatches), nameof(GainAbility_Yaoma)));*/
         }
 
+        // POSTFIX: when right clicking items that can reload the schema, provide FloatMenu option to "reload" with them
         public static void AddHumanlikeOrders_EnergyTracker_Consumable(Vector3 __0, Pawn __1, List<FloatMenuOption> __2)
         {
             Comp_ItsSorcery comp = __1.TryGetComp<Comp_ItsSorcery>() as Comp_ItsSorcery;
@@ -147,7 +148,7 @@ namespace ItsSorceryFramework
                             text = "ISF_Charge".Translate(schema.def.LabelCap.ToString(), ammo.def.ToString())
                             + "ISF_ChargeCalc".Translate(ammo.stackCount, ammo.def.ToString(),
                                 ammo.stackCount * ammoRef[ammo.def],
-                                energyTracker.def.energyStatLabel);
+                                energyTracker.def.energyLabelTranslationKey.Translate());
                         }
                         else
                         {
@@ -156,7 +157,7 @@ namespace ItsSorceryFramework
                             gain = Math.Min(endcount * ammoRef[ammo.def], energyTracker.MaxEnergy - energyTracker.currentEnergy);
                             text = "ISF_Charge".Translate(schema.def.LabelCap.ToString(), ammo.def.ToString())
                             + "ISF_ChargeCalc".Translate(endcount, ammo.def.ToString(),
-                                gain, energyTracker.def.energyStatLabel);
+                                gain, energyTracker.def.energyLabelTranslationKey.Translate());
                         }
                             
                         Action chargeSchema = delegate ()

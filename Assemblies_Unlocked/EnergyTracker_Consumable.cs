@@ -25,29 +25,19 @@ namespace ItsSorceryFramework
             base.ExposeData();
         }
 
-        /*public virtual int MaxCapacity
-        {
-            get
-            {
-                return (int) this.pawn.GetStatValue(def.energyMaxStatDef ?? StatDefOf_ItsSorcery.MaxEnergy_ItsSorcery, true);
-            }
-        }
-
-        public virtual int CurrentCapacity
-        {
-            get
-            {
-                return (int)currentEnergy;
-            }
-        }*/
-
         public override void EnergyTrackerTick()
         {
             float tempEnergy = Math.Min(currentEnergy - 1.TicksToSeconds() * EnergyRecoveryRate / def.refreshTicks, MaxEnergy);
             this.currentEnergy = Math.Max(tempEnergy, 0);
         }
 
-        public override bool TryAlterEnergy(float energyCost, SorceryDef sorceryDef = null)
+        public override bool WouldReachLimitEnergy(float energyCost, SorceryDef sorceryDef = null, Sorcery sorcery = null)
+        {
+            if (currentEnergy - energyCost < 0) return true;
+            return false;
+        }
+
+        public override bool TryAlterEnergy(float energyCost, SorceryDef sorceryDef = null, Sorcery sorcery = null)
         {
             if (!WouldReachLimitEnergy(energyCost, sorceryDef))
             {
@@ -63,23 +53,65 @@ namespace ItsSorceryFramework
             if (MaxEnergy > 0) base.DrawOnGUI(rect);
             else
             {
-                if (Widgets.ButtonTextSubtle(rect, ""))
-                {
-                    Find.WindowStack.Add(new Dialog_MessageBox("magic", null, null, null, null, null, false, null, null, WindowLayer.Dialog));
-                }
-
-                Text.Font = GameFont.Medium;
-                Text.Anchor = TextAnchor.UpperCenter;
-                Widgets.Label(rect, sorcerySchemaDef.LabelCap.ToString());
+                this.SchemaViewBox(rect);
 
                 Text.Font = GameFont.Small;
                 Text.Anchor = TextAnchor.MiddleCenter;
-                Widgets.Label(rect, sorcerySchemaDef.energyTrackerDef.energyStatLabel.CapitalizeFirst() + ": " +
+                Widgets.Label(rect, sorcerySchemaDef.energyTrackerDef.energyLabelTranslationKey.Translate().CapitalizeFirst() + ": " +
                     currentEnergy);
             }
         }
 
-        
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
+        {
+            StatDef statDef;
+
+            StatRequest pawnReq = StatRequest.For(pawn);
+
+            // shows the maximum energy of the whole sorcery schema if max > 0 (thus isn't uncapped)
+            statDef = def.energyMaxStatDef != null ? def.energyMaxStatDef : StatDefOf_ItsSorcery.MaxEnergy_ItsSorcery;
+            if (MaxEnergy > 0)
+            {
+                yield return new StatDrawEntry(StatCategoryDefOf_ItsSorcery.EnergyTracker_ISF,
+                        statDef, pawn.GetStatValue(statDef), pawnReq, ToStringNumberSense.Undefined, statDef.displayPriorityInCategory, false);
+            }
+            else
+            {
+                yield return new StatDrawEntry(StatCategoryDefOf_ItsSorcery.EnergyTracker_ISF,
+                    statDef.LabelForFullStatList, "∞",
+                    statDef.description.Translate(),
+                    statDef.displayPriorityInCategory, null, null, false);
+            }
+
+            // show recovery amount per refresh period
+            statDef = def.energyRecoveryStatDef != null ? def.energyRecoveryStatDef : StatDefOf_ItsSorcery.EnergyRecovery_ItsSorcery; 
+            if(EnergyRecoveryRate != 0)
+            {
+                yield return new StatDrawEntry(StatCategoryDefOf_ItsSorcery.EnergyTracker_ISF,
+                    statDef, pawn.GetStatValue(statDef), pawnReq, ToStringNumberSense.Undefined, statDef.displayPriorityInCategory, false);
+            }
+
+            String ammo = "";
+            foreach(var item in def.sorceryAmmoDict)
+            {
+                if(ammo == "")
+                {
+                    ammo = item.Key.LabelCap + " ({0})".Translate(item.Value);
+                }
+                else ammo = ammo + ", "+ item.Key.LabelCap + " ({0})".Translate(item.Value);
+            }
+            if (ammo == "") ammo = "None";
+
+            yield return new StatDrawEntry(StatCategoryDefOf_ItsSorcery.EnergyTracker_ISF,
+                    "EnergyTrackerAmmo_ISF".Translate(), ammo,
+                    "EnergyTrackerAmmoDesc_ISF".Translate(),
+                    10, null, null, false);
+
+
+
+        }
+
+
 
     }
 }

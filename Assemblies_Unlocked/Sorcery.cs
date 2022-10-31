@@ -46,7 +46,7 @@ namespace ItsSorceryFramework
             if (energyTracker == null) return false;
 
             float finalEnergyCost = sorceryDef.EnergyCost * energyTracker.EnergyCostFactor;
-            if (!energyTracker.TryAlterEnergy(finalEnergyCost, sorceryDef))
+            if (!energyTracker.TryAlterEnergy(finalEnergyCost, sorceryDef, this))
             {
                 return false;
             }

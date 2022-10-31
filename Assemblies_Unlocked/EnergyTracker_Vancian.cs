@@ -45,7 +45,7 @@ namespace ItsSorceryFramework
         {
             get
             {
-                return this.pawn.GetStatValue(def.CastFactorStatDef ?? StatDefOf_ItsSorcery.CastFactor_ItsSorcery, true);
+                return this.pawn.GetStatValue(def.castFactorStatDef ?? StatDefOf_ItsSorcery.CastFactor_ItsSorcery, true);
             }
         }
 
@@ -64,19 +64,30 @@ namespace ItsSorceryFramework
 
         public virtual void RefreshAllCasts()
         {
-            foreach (var sorceryPair in vancianCasts)
+            Dictionary<SorceryDef, int> refreshed = new Dictionary<SorceryDef, int>();
+            //int count = vancianCasts.Count();
+
+            /*while(count > 0)
             {
-                vancianCasts[sorceryPair.Key] = (int) Math.Ceiling(sorceryPair.Key.MaximumCasts * CastFactor);
+
+            }*/
+
+            foreach (var pair in vancianCasts)
+            {
+                //vancianCasts[key] = (int) Math.Ceiling(key.MaximumCasts * CastFactor);
+                refreshed[pair.Key] = (int)Math.Ceiling(pair.Key.MaximumCasts * CastFactor);
             }
+
+            vancianCasts = refreshed;
         }
 
-        public override bool WouldReachLimitEnergy(float energyCost, SorceryDef sorceryDef = null)
+        public override bool WouldReachLimitEnergy(float energyCost, SorceryDef sorceryDef = null, Sorcery sorcery = null)
         {
             if (vancianCasts[sorceryDef] <= 0) return true;
             return false;
         }
 
-        public override bool TryAlterEnergy(float energyCost, SorceryDef sorceryDef = null)
+        public override bool TryAlterEnergy(float energyCost, SorceryDef sorceryDef = null, Sorcery sorcery = null)
         {
             if (!WouldReachLimitEnergy(energyCost, sorceryDef))
             {
@@ -89,25 +100,38 @@ namespace ItsSorceryFramework
 
         public override void DrawOnGUI(Rect rect)
         {
-            if (Widgets.ButtonTextSubtle(rect, ""))
-            {
-                Find.WindowStack.Add(new Dialog_MessageBox("magic", null, null, null, null, null, false, null, null, WindowLayer.Dialog));
-            }
-
-            Text.Font = GameFont.Medium;
-            Text.Anchor = TextAnchor.UpperCenter;
-            Widgets.Label(rect, sorcerySchemaDef.LabelCap.ToString());
+            this.SchemaViewBox(rect);
 
             Text.Font = GameFont.Small;
             Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(rect, def.TranslatedRefreshNotif.Translate(GenDate.ToStringTicksToPeriod(tickCount)));
+            Widgets.Label(rect, def.RefreshNotifTranslationKey.Translate(GenDate.ToStringTicksToPeriod(tickCount)));
             
             Text.Anchor = TextAnchor.UpperLeft;
         }
 
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
+        {
+            StatDef statDef;
+            StatRequest pawnReq = StatRequest.For(pawn);
+
+            statDef = def.castFactorStatDef != null ? def.castFactorStatDef : StatDefOf_ItsSorcery.CastFactor_ItsSorcery;
+            yield return new StatDrawEntry(StatCategoryDefOf_ItsSorcery.EnergyTracker_ISF,
+                        statDef, pawn.GetStatValue(statDef), pawnReq, ToStringNumberSense.Undefined, statDef.displayPriorityInCategory, false);
+
+            yield return new StatDrawEntry(StatCategoryDefOf_ItsSorcery.EnergyTracker_ISF,
+                    def.RefreshInfoTranslationKey.Translate(), def.refreshTicks.TicksToSeconds().ToString(),
+                    def.RefreshInfoDescTranslationKey.Translate(),
+                    10, null, null, false); 
+        }
+
+        public override string DisableCommandReason()
+        {
+            return def.DisableReasonTranslationKey ?? "CommandDisableReasonVancian_ISF";
+        }
+
         public override string TopRightLabel(SorceryDef sorceryDef)
         {
-            return (sorceryDef?.sorcerySchema.energyTrackerDef.energyStatLabel.CapitalizeFirst()[0]) + ": " +
+            return (sorceryDef?.sorcerySchema.energyTrackerDef.energyLabelTranslationKey.Translate().CapitalizeFirst()[0]) + ": " +
                 vancianCasts[sorceryDef].ToString() + "/" +
                 ((int) Math.Ceiling(sorceryDef.MaximumCasts * this.CastFactor)).ToString();
         }

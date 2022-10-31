@@ -37,23 +37,23 @@ namespace ItsSorceryFramework
         {
             if (Find.TickManager.TicksGame % TurnTicks == 0)
             {
-                if (currentEnergy < 0) // when energy below 0
+                float tempEnergy;
+                if (currentEnergy < 0)
                 {
-                    float tempEnergy = Math.Min(currentEnergy + 1.TicksToSeconds() * EnergyRecoveryRate,
-                        0);
-                    this.currentEnergy = Math.Max(tempEnergy, MinEnergy);
+                    tempEnergy = Math.Min(currentEnergy + EnergyRecoveryRate * UnderBarRecoveryFactor,
+                        MaxEnergy);
                 }
                 else if (currentEnergy <= MaxEnergy) // when energy is under or equal the normal max
                 {
-                    float tempEnergy = Math.Min(currentEnergy - 1.TicksToSeconds() * EnergyRecoveryRate, MaxEnergy);
-                    this.currentEnergy = Math.Max(tempEnergy, 0);
+                    tempEnergy = Math.Min(currentEnergy - EnergyRecoveryRate, MaxEnergy);
                 }
                 else // when energy is over the normal max
                 {
-                    float tempEnergy = Math.Min(currentEnergy - 1.TicksToSeconds() * EnergyRecoveryRate * OverBarLossFactor,
-                        MaxEnergyOverload);
-                    this.currentEnergy = Math.Max(tempEnergy, MinEnergy);
+                    tempEnergy = Math.Min(currentEnergy - EnergyRecoveryRate * OverBarRecoveryFactor,
+                        OverMaxEnergy);
                 }
+
+                this.currentEnergy = Math.Max(tempEnergy, MinEnergy);
 
                 if (Find.Selector.FirstSelectedObject == pawn && pawn.Drafted) Find.TickManager.Pause();
                 
@@ -64,14 +64,7 @@ namespace ItsSorceryFramework
 
         public override void DrawOnGUI(Rect rect)
         {
-            if (Widgets.ButtonTextSubtle(rect, ""))
-            {
-                Find.WindowStack.Add(new Dialog_MessageBox("magic", null, null, null, null, null, false, null, null, WindowLayer.Dialog));
-            }
-
-            Text.Font = GameFont.Medium;
-            Text.Anchor = TextAnchor.UpperCenter;
-            Widgets.Label(rect, sorcerySchemaDef.LabelCap.ToString());
+            this.SchemaViewBox(rect);
 
             Text.Font = GameFont.Small;
             Text.Anchor = TextAnchor.MiddleCenter;
@@ -84,7 +77,7 @@ namespace ItsSorceryFramework
             barBox.y = labelBox.y;
             barBox.height = 22;
 
-            Widgets.Label(labelBox, sorcerySchemaDef.energyTrackerDef.energyStatLabel.CapitalizeFirst());
+            Widgets.Label(labelBox, sorcerySchemaDef.energyTrackerDef.energyLabelTranslationKey.Translate().CapitalizeFirst());
 
             if (this.EnergyRelativeValue < 0)
             {
@@ -98,7 +91,7 @@ namespace ItsSorceryFramework
             }
             else
             {
-                Widgets.FillableBar(barBox, Mathf.Min((this.EnergyRelativeValue - 1f) / (MaxEnergyOverload / MaxEnergy - 1), 1f),
+                Widgets.FillableBar(barBox, Mathf.Min((this.EnergyRelativeValue - 1), 1f),
                     GizmoTextureUtility.UnderBarTex,
                     GizmoTextureUtility.BarTex, true);
             }
@@ -113,6 +106,22 @@ namespace ItsSorceryFramework
             HightlightEnergyCost(barBox);
         }
 
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
+        {
+            // see EnergyTracker_RPG.SpecialDisplayStats(req)
+            // adds all the entries from that method into this one
+            foreach (StatDrawEntry entry in base.SpecialDisplayStats(req))
+            {
+                yield return entry;
+            }
+
+            // returns how long a "turn" takes (time before auto-pause when the pawn with this energytracker is drafted)
+            yield return new StatDrawEntry(StatCategoryDefOf_ItsSorcery.EnergyTracker_ISF,
+                    def.TurnInfoTranslationKey.Translate(), def.turnTicks.TicksToSeconds().ToString(),
+                    def.TurnInfoDescTranslationKey.Translate(),
+                    20, null, null, false);
+
+        }
 
         public int countdownTick = 0;
 

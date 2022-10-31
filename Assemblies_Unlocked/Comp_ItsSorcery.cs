@@ -36,6 +36,7 @@ namespace ItsSorceryFramework
 					schemaTracker.sorcerySchemas.Add(SorcerySchemaUtility.InitializeSorcerySchema(pawn, SorcerySchemaDefOf.SorcerySchema_Base4));
 					schemaTracker.sorcerySchemas.Add(SorcerySchemaUtility.InitializeSorcerySchema(pawn, SorcerySchemaDefOf.SorcerySchema_Base5));
 					schemaTracker.sorcerySchemas.Add(SorcerySchemaUtility.InitializeSorcerySchema(pawn, SorcerySchemaDefOf.SorcerySchema_Base6));
+					schemaTracker.sorcerySchemas.Add(SorcerySchemaUtility.InitializeSorcerySchema(pawn, SorcerySchemaDefOf.SorcerySchema_Base7));
 				}
 				
 			}

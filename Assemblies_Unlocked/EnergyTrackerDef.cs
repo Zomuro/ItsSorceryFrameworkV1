@@ -10,48 +10,67 @@ namespace ItsSorceryFramework
 {
     public class EnergyTrackerDef : Def
     {
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
+        {
+            base.SpecialDisplayStats(req);
+            yield break;
+        }
+
         // EnergyTracker class
         public Type energyTrackerClass = typeof(EnergyTracker);
-        
-        // EnergyTracker stats
+
+        // EnergyTracker unit variables
+        public string energyLabelTranslationKey = "EnergyTrackerEnergyLabel_ISF";
+
+        public string EnergyDescTranslationKey = "EnergyStatDesc_ISF";
+
+        // EnergyTracker general stats
         public StatDef energyMaxStatDef;
 
         public StatDef energyMinStatDef;
 
-        public string energyStatLabel = "energy";
+        public StatDef energyOverMaxStatDef;
 
         public StatDef energyRecoveryStatDef;
 
         public StatDef energyCostFactorStatDef;
 
-        public StatDef CastFactorStatDef;
+        public StatDef castFactorStatDef;
 
-        public float overBarFactor = 0f;
+        public float overBarRecoveryFactor = 1f;
 
-        public float overBarLossFactor = 1f;
+        public float underBarRecoveryFactor = 1f;
 
-        public float underBarLossFactor = 1f;
+        public HediffDef sideEffect;
 
         // TurnBased EnergyTrackers
+        public string TurnInfoTranslationKey = "EnergyTrackerTurnInfo_ISF";
+
+        public string TurnInfoDescTranslationKey = "EnergyTrackerTurnInfoDesc_ISF";
+
         public int turnTicks = 60;
 
         // Vancian EnergyTracker Stats
-        public string TranslatedRefreshNotif = "EnergyTrackerVancianRefresh_ItsSorcery";
+        public string RefreshNotifTranslationKey = "EnergyTrackerVancianRefresh_ItsSorcery";
+
+        public string RefreshInfoTranslationKey = "EnergyTrackerRefreshInfo_ISF";
+
+        public string RefreshInfoDescTranslationKey = "EnergyTrackerRefreshInfoDesc_ISF";
 
         public int refreshTicks = 60000;
 
         //VancianLifetime EnergyTracker string
-        public string TranslatedCastsCount = "EnergyTrackerVancianCastsLeft_ItsSorcery";
+        public string CastsCountTranslationKey = "EnergyTrackerVancianCastsLeft_ItsSorcery";
 
         // Command disable string
-        public string TranslatedDisableReason;
+        public string DisableReasonTranslationKey;
 
-        //public ThingDef sorceryAmmo;
-
-        //public float sorceryAmmoFactor = 1f;
-
+        // Consumable EnerrgyTracker ammo dictionary
         public Dictionary<ThingDef, float> sorceryAmmoDict;
 
-        public HediffDef sideEffect;
+        // Cooldown EnergyTracker string
+        public string CooldownTranslationKey = "EnergyTrackerCooldown_ItsSorcery";
+
+
     }
 }

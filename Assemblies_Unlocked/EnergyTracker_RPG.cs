@@ -33,6 +33,16 @@ namespace ItsSorceryFramework
             }
         }
 
+        public override float OverMaxEnergy
+        {
+            get
+            {
+                return Math.Min(Math.Max(MaxEnergy, this.pawn.GetStatValue(def.energyOverMaxStatDef ?? 
+                    StatDefOf_ItsSorcery.OverMaxEnergy_ItsSorcery, true)),
+                    2f * MaxEnergy);
+            }
+        }
+
         public override float MinEnergy
         {
             get
@@ -58,27 +68,19 @@ namespace ItsSorceryFramework
             }
         }
 
-        public override float OverBarFactor
+        public override float OverBarRecoveryFactor
         {
             get
             {
-                return Math.Min(Math.Max(def.overBarFactor, 0f), 1f);
+                return Math.Max(def.overBarRecoveryFactor, 0.1f);
             }
         }
 
-        public override float OverBarLossFactor
+        public override float UnderBarRecoveryFactor
         {
             get
             {
-                return Math.Max(def.overBarLossFactor, 0.1f);
-            }
-        }
-
-        public override float MaxEnergyOverload
-        {
-            get
-            {
-                return Math.Min(MaxEnergy * (1f + OverBarFactor), MaxEnergy * 2f);
+                return Math.Max(def.underBarRecoveryFactor, 0.1f);
             }
         }
 
@@ -86,32 +88,13 @@ namespace ItsSorceryFramework
         {
             float tempCurrentEnergy = currentEnergy - energyCost;
 
-            /*if (tempCurrentEnergy <= MinEnergy)
-            {
-                return MinEnergy / MaxEnergy;
-            }
-
-            if (tempCurrentEnergy < 0)
-            {
-                return (tempCurrentEnergy) / Math.Abs(MinEnergy);
-            }
-
-            if (tempCurrentEnergy <= MaxEnergy) return tempCurrentEnergy / MaxEnergy;
-
-            if (tempCurrentEnergy <= MaxEnergyOverload)
-            {
-                return 1f + (tempCurrentEnergy - MaxEnergy) / (MaxEnergyOverload - MaxEnergy);
-            }
-
-            return 2f * MaxEnergy;*/
-
             if (tempCurrentEnergy <= MinEnergy)
             {
                 return MinEnergy / MaxEnergy;
             }
-            if (tempCurrentEnergy >= MaxEnergyOverload)
+            if (tempCurrentEnergy >= OverMaxEnergy)
             {
-                return MaxEnergyOverload / MaxEnergy;
+                return OverMaxEnergy / MaxEnergy;
             }
             return tempCurrentEnergy / MaxEnergy;
 
@@ -119,32 +102,36 @@ namespace ItsSorceryFramework
 
         public override void EnergyTrackerTick()
         {
-
-            if (currentEnergy <= MaxEnergy) // when energy is under or equal the normal max
+            float tempEnergy;
+            if (currentEnergy < 0)
             {
-                float tempEnergy = Math.Min(currentEnergy + 1.TicksToSeconds() * EnergyRecoveryRate, MaxEnergy);
-                this.currentEnergy = Math.Max(tempEnergy, MinEnergy);
+                tempEnergy = Math.Min(currentEnergy + 1.TicksToSeconds() * EnergyRecoveryRate * UnderBarRecoveryFactor, 
+                    MaxEnergy);
+            }
+            else if (currentEnergy <= MaxEnergy) // when energy is under or equal the normal max
+            {
+                tempEnergy = Math.Min(currentEnergy + 1.TicksToSeconds() * EnergyRecoveryRate, MaxEnergy);
             }
             else // when energy is over the normal max
             {
-                float tempEnergy = Math.Min(currentEnergy - 1.TicksToSeconds() * EnergyRecoveryRate * OverBarLossFactor,
-                    MaxEnergyOverload);
-                this.currentEnergy = Math.Max(tempEnergy, MinEnergy);
+                tempEnergy = Math.Min(currentEnergy - 1.TicksToSeconds() * EnergyRecoveryRate * OverBarRecoveryFactor,
+                    OverMaxEnergy);
             }
-            //if (Find.TickManager.TicksGame % 60 == 0) Log.Message(currentEnergy.ToString());
+
+            this.currentEnergy = Math.Max(tempEnergy, MinEnergy);
         }
 
-        public override bool WouldReachLimitEnergy(float energyCost, SorceryDef sorceryDef = null)
+        public override bool WouldReachLimitEnergy(float energyCost, SorceryDef sorceryDef = null, Sorcery sorcery = null)
         {
             if (currentEnergy - energyCost < MinEnergy && limitLocked) return true;
             return false;
         }
 
-        public override bool TryAlterEnergy(float energyCost, SorceryDef sorceryDef = null)
+        public override bool TryAlterEnergy(float energyCost, SorceryDef sorceryDef = null, Sorcery sorcery = null)
         {
             if (!WouldReachLimitEnergy(energyCost))
             {
-                currentEnergy = Math.Min(Math.Max(MinEnergy, currentEnergy - energyCost), MaxEnergyOverload);
+                currentEnergy = Math.Min(Math.Max(MinEnergy, currentEnergy - energyCost), OverMaxEnergy);
                 this.ApplyHediffSeverity(this.EnergyToRelativeValue());
                 return true;
             }
@@ -177,14 +164,7 @@ namespace ItsSorceryFramework
 
         public override void DrawOnGUI(Rect rect)
         {
-            if (Widgets.ButtonTextSubtle(rect, ""))
-            {
-                Find.WindowStack.Add(new Dialog_MessageBox("magic", null, null, null, null, null, false, null, null, WindowLayer.Dialog));
-            }
-
-            Text.Font = GameFont.Medium;
-            Text.Anchor = TextAnchor.UpperCenter;
-            Widgets.Label(rect, sorcerySchemaDef.LabelCap.ToString());
+            this.SchemaViewBox(rect);
 
             Text.Font = GameFont.Small;
             Text.Anchor = TextAnchor.MiddleCenter;
@@ -197,7 +177,7 @@ namespace ItsSorceryFramework
             barBox.y = labelBox.y;
             barBox.height = 22;
 
-            Widgets.Label(labelBox, sorcerySchemaDef.energyTrackerDef.energyStatLabel.CapitalizeFirst());
+            Widgets.Label(labelBox, sorcerySchemaDef.energyTrackerDef.energyLabelTranslationKey.Translate().CapitalizeFirst());
 
             if (this.EnergyRelativeValue < 0)
             {
@@ -260,12 +240,12 @@ namespace ItsSorceryFramework
                 if (findFloor(relativeEnergy) != findFloor(relativeEnergyDiff)) 
                 {
                     highlight.xMin = Widgets.AdjustCoordToUIScalingFloor(min);
-                    highlight.xMax = Widgets.AdjustCoordToUIScalingFloor(min + normalizeVal(relativeEnergy)*width);
+                    highlight.xMax = Widgets.AdjustCoordToUIScalingFloor(min + normVal(relativeEnergy)*width);
                 }
                 else // if current relative qi < qi cost of ability
                 {
-                    highlight.xMin = Widgets.AdjustCoordToUIScalingFloor(min + normalizeVal(relativeEnergyDiff) * width);
-                    highlight.xMax = Widgets.AdjustCoordToUIScalingFloor(min + normalizeVal(relativeEnergy) * width);
+                    highlight.xMin = Widgets.AdjustCoordToUIScalingFloor(min + normVal(relativeEnergyDiff) * width);
+                    highlight.xMax = Widgets.AdjustCoordToUIScalingFloor(min + normVal(relativeEnergy) * width);
                 }
                 //rect6.xMin = Widgets.AdjustCoordToUIScalingFloor(rect6.xMin + num3 * width);
                 //rect6.width = Widgets.AdjustCoordToUIScalingFloor(Mathf.Max(Mathf.Min(num4, 1f) - num3, 0f) * width);
@@ -278,13 +258,13 @@ namespace ItsSorceryFramework
             {
                 if (findFloor(relativeEnergy, false) != findFloor(relativeEnergyDiff, false)) 
                 {
-                    highlight.xMin = Widgets.AdjustCoordToUIScalingFloor(min + normalizeVal(relativeEnergy, false) * width);
+                    highlight.xMin = Widgets.AdjustCoordToUIScalingFloor(min + normVal(relativeEnergy, false) * width);
                     highlight.xMax = Widgets.AdjustCoordToUIScalingFloor(max);
                 }
                 else // if current relative qi < qi cost of ability
                 {
-                    highlight.xMin = Widgets.AdjustCoordToUIScalingFloor(min + normalizeVal(relativeEnergy, false) * width);
-                    highlight.xMax = Widgets.AdjustCoordToUIScalingFloor(Math.Min(min + normalizeVal(relativeEnergyDiff, false) * width, max));
+                    highlight.xMin = Widgets.AdjustCoordToUIScalingFloor(min + normVal(relativeEnergy, false) * width);
+                    highlight.xMax = Widgets.AdjustCoordToUIScalingFloor(Math.Min(min + normVal(relativeEnergyDiff, false) * width, max));
                 }
                 //rect6.xMin = Widgets.AdjustCoordToUIScalingFloor(rect6.xMin + num3 * width);
                 //rect6.width = Widgets.AdjustCoordToUIScalingFloor(Mathf.Max(Mathf.Min(num4, 1f) - num3, 0f) * width);
@@ -295,15 +275,62 @@ namespace ItsSorceryFramework
 
         }
 
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
+        {
+            StatDef statDef;
+
+            StatRequest pawnReq = StatRequest.For(pawn);
+
+            // shows the maximum energy of the whole sorcery schema
+            statDef = def.energyMaxStatDef != null ? def.energyMaxStatDef : StatDefOf_ItsSorcery.MaxEnergy_ItsSorcery;
+            yield return new StatDrawEntry(StatCategoryDefOf_ItsSorcery.EnergyTracker_ISF,
+                    statDef, pawn.GetStatValue(statDef), pawnReq, ToStringNumberSense.Undefined, statDef.displayPriorityInCategory, false);
+            
+            if(OverMaxEnergy > MaxEnergy) // only show if there's a difference between overmax and max energy.
+            {
+                statDef = def.energyOverMaxStatDef != null ? def.energyOverMaxStatDef : StatDefOf_ItsSorcery.OverMaxEnergy_ItsSorcery;
+                yield return new StatDrawEntry(StatCategoryDefOf_ItsSorcery.EnergyTracker_ISF,
+                        statDef, pawn.GetStatValue(statDef), pawnReq, ToStringNumberSense.Undefined, statDef.displayPriorityInCategory, false);
+            }
+            
+            if(MinEnergy < 0) // only show if there's a difference between min energy and 0.
+            {
+                statDef = def.energyMinStatDef != null ? def.energyMinStatDef : StatDefOf_ItsSorcery.MinEnergy_ItsSorcery;
+                yield return new StatDrawEntry(StatCategoryDefOf_ItsSorcery.EnergyTracker_ISF,
+                        statDef, pawn.GetStatValue(statDef), pawnReq, ToStringNumberSense.Undefined, statDef.displayPriorityInCategory, false);
+            }
+
+            // show recovery amount per second
+            statDef = def.energyRecoveryStatDef != null ? def.energyRecoveryStatDef : StatDefOf_ItsSorcery.EnergyRecovery_ItsSorcery;
+            yield return new StatDrawEntry(StatCategoryDefOf_ItsSorcery.EnergyTracker_ISF,
+                    statDef, pawn.GetStatValue(statDef), pawnReq, ToStringNumberSense.Undefined, statDef.displayPriorityInCategory, false);
+
+            // shows a pawn's multiplier on relevant sorcery cost
+            statDef = def.energyCostFactorStatDef != null ? def.energyCostFactorStatDef : StatDefOf_ItsSorcery.EnergyCostFactor_ItsSorcery;
+            yield return new StatDrawEntry(StatCategoryDefOf_ItsSorcery.EnergyTracker_ISF,
+                    statDef, pawn.GetStatValue(statDef), pawnReq, ToStringNumberSense.Undefined, statDef.displayPriorityInCategory, false);
+
+            //over and under bar drain multiplier
+            yield return new StatDrawEntry(StatCategoryDefOf_ItsSorcery.EnergyTracker_ISF,
+                    "EnergyTrackerUnderBarFactor_ISF".Translate(), def.underBarRecoveryFactor.ToStringPercent(),
+                    "EnergyTrackerUnderBarFactorDesc_ISF".Translate(), 40, null, null, false);
+
+            yield return new StatDrawEntry(StatCategoryDefOf_ItsSorcery.EnergyTracker_ISF,
+                    "EnergyTrackerOverBarFactor_ISF".Translate(), (-1f * def.overBarRecoveryFactor).ToStringPercent(),
+                    "EnergyTrackerOverBarFactorDesc_ISF".Translate(),
+                    30, null, null, false);
+
+        }
+
         public override string TopRightLabel(SorceryDef sorceryDef)
         {
-            return (sorceryDef?.sorcerySchema.energyTrackerDef.energyStatLabel.CapitalizeFirst()[0]) + ": " +
+            return (sorceryDef?.sorcerySchema.energyTrackerDef.energyLabelTranslationKey.Translate().CapitalizeFirst()[0]) + ": " +
                     Math.Round(sorceryDef.EnergyCost * this.EnergyCostFactor, 2).ToString();
         }
 
         public override string DisableCommandReason()
         {
-            return def.TranslatedDisableReason ?? "CommandDisableReasonBase_ISF";
+            return def.DisableReasonTranslationKey ?? "CommandDisableReasonBase_ISF";
         }
 
 

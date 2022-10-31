@@ -41,7 +41,7 @@ namespace ItsSorceryFramework
         {
             get
             {
-                return this.pawn.GetStatValue(def.energyMaxStatDef, true);
+                return 50f;//this.pawn.GetStatValue(def.energyMaxStatDef, true);
             }
         }
 
@@ -49,7 +49,15 @@ namespace ItsSorceryFramework
         {
             get
             {
-                return this.pawn.GetStatValue(def.energyMinStatDef, true);
+                return 0f; //this.pawn.GetStatValue(def.energyMinStatDef, true);
+            }
+        }
+
+        public virtual float OverMaxEnergy
+        {
+            get
+            {
+                return 100;//this.pawn.GetStatValue(def.energyOverMaxStatDef, true);
             }
         }
 
@@ -57,7 +65,7 @@ namespace ItsSorceryFramework
         {
             get
             {
-                return this.pawn.GetStatValue(def.energyRecoveryStatDef, true);
+                return 5f; //this.pawn.GetStatValue(def.energyRecoveryStatDef, true);
             }
         }
 
@@ -65,11 +73,11 @@ namespace ItsSorceryFramework
         {
             get
             {
-                return this.pawn.GetStatValue(def.energyCostFactorStatDef, true);
+                return 1f; // this.pawn.GetStatValue(def.energyCostFactorStatDef, true);
             }
         }
 
-        public virtual float OverBarFactor
+        public virtual float OverBarRecoveryFactor
         {
             get
             {
@@ -77,19 +85,11 @@ namespace ItsSorceryFramework
             }
         }
 
-        public virtual float OverBarLossFactor
+        public virtual float UnderBarRecoveryFactor
         {
             get
             {
-                return 1f;
-            }
-        }
-
-        public virtual float MaxEnergyOverload
-        {
-            get
-            {
-                return MaxEnergy * (1f + OverBarFactor);
+                return 0.5f;
             }
         }
 
@@ -120,12 +120,12 @@ namespace ItsSorceryFramework
             return 0f;
         }
 
-        public virtual bool WouldReachLimitEnergy(float energyCost, SorceryDef sorceryDef = null)
+        public virtual bool WouldReachLimitEnergy(float energyCost, SorceryDef sorceryDef = null, Sorcery sorcery = null)
         {
             return false;
         }
 
-        public virtual bool TryAlterEnergy(float energyCost, SorceryDef sorceryDef = null)
+        public virtual bool TryAlterEnergy(float energyCost, SorceryDef sorceryDef = null, Sorcery sorcery = null)
         {
             currentEnergy = Math.Max(0f, currentEnergy - energyCost);
             return true;
@@ -156,34 +156,70 @@ namespace ItsSorceryFramework
 
         }
 
-        public int findFloor(float relVal, bool neg = true)
+        public void SchemaViewBox(Rect rect)
         {
-            if (neg)
+            /*if (Widgets.ButtonTextSubtle(rect, ""))
             {
-                if (relVal < 0) return -1;
-                else if (relVal > 1) return 1;
-            }
-            else
-            {
-                if (relVal < 0) return -1;
-                else if (relVal >= 1) return 1;
-            }
-            return 0;
+                Find.WindowStack.Add(new Dialog_MessageBox("magic", null, null, null, null, null, false, null, null, WindowLayer.Dialog));
+            }*/
+
+            // sets up outline of the sorcery schema in the itab
+            Widgets.DrawBoxSolidWithOutline(rect, new Color(), Color.grey, 1);
+
+            // information button- shows important info about the sorcery schema
+            SorcerySchemaDef tempSchemaDef = sorcerySchemaDef;
+            tempSchemaDef.TempPawn = pawn;
+            sorcerySchemaDef.TempPawn = pawn;
+
+            Widgets.InfoCardButton(rect.x + 5, rect.y + 5, tempSchemaDef);
+            tempSchemaDef.ClearCachedData();
+            //sorcerySchemaDef.TempPawn = null;
+
+            // shows the label of the sorcery schema in the itab
+            Text.Font = GameFont.Medium;
+            Text.Anchor = TextAnchor.UpperCenter;
+            Widgets.Label(rect, sorcerySchemaDef.LabelCap.ToString());
         }
 
-        public float normalizeVal(float relVal, bool neg = true)
+        // used to detect if two values are on different "bars"
+        // min bar: less than 0% energy
+        // max bar: greater than 0%, less than 100%
+        // overmax bar: greater than 100%
+        public int findFloor(float relVal, bool decrease = true)
         {
-            if (neg)
+            if (!decrease)
             {
-                if (relVal < 0) return relVal + 1;
-                else if (relVal > 1) return relVal - 1;
+                if (relVal < 0) return -1;
+                else if (relVal < 1) return 0;
             }
             else
             {
-                if (relVal < 0) return relVal + 1;
-                else if (relVal >= 1) return relVal - 1;
+                if (relVal <= 0) return -1;
+                else if (relVal <= 1) return 0;
             }
-            return relVal;
+            return 1;
+        }
+
+        // normalizes relative values for use in highlighting sorcery costs
+        // see findFloor(relVal, decrease) for structure
+        public float normVal(float relVal, bool decrease = true)
+        {
+            if (!decrease)
+            {
+                if (relVal < 0) return relVal + 1;
+                else if (relVal < 1) return relVal;
+            }
+            else
+            {
+                if (relVal <= 0) return relVal + 1;
+                else if (relVal <= 1) return relVal;
+            }
+            return relVal - 1;
+        }
+
+        public virtual IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
+        {
+            yield break;
         }
 
         public virtual string TopRightLabel(SorceryDef sorceryDef)

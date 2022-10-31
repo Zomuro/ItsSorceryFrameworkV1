@@ -23,7 +23,7 @@ namespace ItsSorceryFramework
 		{
 			get
 			{
-				return (int) this.statBases.GetStatValueFromList(StatDefOf_ItsSorcery.Sorcery_MaxCasts, 0) ;
+				return (int) this.statBases.GetStatValueFromList(StatDefOf_ItsSorcery.Sorcery_MaxCasts, 1);
 			}
 		}
 
@@ -33,7 +33,7 @@ namespace ItsSorceryFramework
 			if (this.EnergyCost != 0)
 			{
 				EnergyTracker energyTracker = SorcerySchemaUtility.FindSorcerySchema(forPawn, this).energyTracker;
-				yield return this.sorcerySchema.energyTrackerDef.energyStatLabel.CapitalizeFirst() + ": "+ 
+				yield return this.sorcerySchema.energyTrackerDef.energyLabelTranslationKey.Translate().CapitalizeFirst() + ": "+ 
 					Math.Round(this.EnergyCost * energyTracker.EnergyCostFactor, 2);
 			}
 			if (this.verbProperties.warmupTime > 1.401298E-45f)
@@ -69,6 +69,12 @@ namespace ItsSorceryFramework
 			}
 			
 			return this.cachedTooltip;
+		}
+
+		public override IEnumerable<StatDrawEntry> SpecialDisplayStats(StatRequest req)
+		{
+			base.SpecialDisplayStats(req);
+			yield break;
 		}
 
 
