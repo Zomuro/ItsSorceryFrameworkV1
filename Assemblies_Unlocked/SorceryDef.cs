@@ -77,7 +77,6 @@ namespace ItsSorceryFramework
 			yield break;
 		}
 
-
 		public SorcerySchemaDef sorcerySchema; // links sorcery to a magic system
 
 		//public StatDef energyCostStat;

@@ -50,6 +50,8 @@ namespace ItsSorceryFramework
 
 		public override void PostExposeData()
 		{
+			base.PostExposeData();
+			Scribe_References.Look(ref pawn, "pawn");
 			Scribe_Deep.Look(ref schemaTracker, true, "schemaTracker", this.parent as Pawn);
 		}
 

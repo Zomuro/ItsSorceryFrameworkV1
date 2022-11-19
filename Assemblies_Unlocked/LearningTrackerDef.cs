@@ -10,5 +10,9 @@ namespace ItsSorceryFramework
 {
     public class LearningTrackerDef : Def
     {
+        // EnergyTracker class
+        public Type learningTrackerClass = typeof(LearningTracker);
+
+
     }
 }

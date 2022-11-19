@@ -102,7 +102,7 @@ namespace ItsSorceryFramework
 
         public EnergyTrackerDef energyTrackerDef;
 
-        public List<LearningTrackerDef> learningTrackerDefs;
+        public List<LearningTrackerDef> learningTrackerDefs = new List<LearningTrackerDef>();
 
         public ProgressTrackerDef progressTrackerDef;
 

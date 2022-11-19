@@ -12,6 +12,10 @@ namespace ItsSorceryFramework
     public class EnergyTracker_RPG : EnergyTracker
     {
         // initalizer- created via activator via SorcerySchema
+        public EnergyTracker_RPG(Pawn pawn) : base(pawn)
+        {
+        }
+
         public EnergyTracker_RPG(Pawn pawn, EnergyTrackerDef def) : base(pawn, def)
         {
         }

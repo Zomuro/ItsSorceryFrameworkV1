@@ -8,8 +8,13 @@ using Verse;
 
 namespace ItsSorceryFramework
 {
-    public class SorcerySchema
+    public class SorcerySchema : IExposable
     {
+        public SorcerySchema(Pawn pawn)
+        {
+            this.pawn = pawn;
+        }
+
         public SorcerySchema(Pawn pawn, SorcerySchemaDef def)
         {
             this.pawn = pawn;
@@ -21,8 +26,13 @@ namespace ItsSorceryFramework
         {
             this.energyTracker = Activator.CreateInstance(def.energyTrackerDef.energyTrackerClass,
                 new object[] { pawn, def}) as EnergyTracker;
-            Log.Message(energyTracker.def.defName);
-            Log.Message(energyTracker.ToString());
+
+            foreach (LearningTrackerDef ltDef in def.learningTrackerDefs)
+            {
+                learningTrackers.Add(Activator.CreateInstance(ltDef.learningTrackerClass,
+                    new object[] { pawn, ltDef, def }) as LearningTracker);
+            }
+
         }
 
         public virtual void SchemaTick()
@@ -35,13 +45,22 @@ namespace ItsSorceryFramework
             
         }
 
+        public virtual void ExposeData()
+        {
+            Scribe_References.Look(ref pawn, "pawn");
+            Scribe_Defs.Look(ref def, "def");
+            Scribe_Deep.Look(ref energyTracker, "energyTracker", new object[] {pawn});
+            Scribe_Collections.Look(ref learningTrackers, "learningTrackers", LookMode.Deep, new object[] { pawn });
+            Scribe_Deep.Look(ref progressTracker, "progressTracker");
+        }
+
         public Pawn pawn;
 
         public SorcerySchemaDef def;
 
         public EnergyTracker energyTracker;
 
-        public List<LearningTracker> learningTrackers;
+        public List<LearningTracker> learningTrackers = new List<LearningTracker>();
 
         public ProgressTracker progressTracker;
     }

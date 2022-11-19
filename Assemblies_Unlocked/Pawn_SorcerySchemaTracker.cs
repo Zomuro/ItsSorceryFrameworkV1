@@ -28,17 +28,22 @@ namespace ItsSorceryFramework
             }
         }
 
-        public void ExposeData()
+        public virtual void ExposeData()
         {
-            Scribe_Collections.Look(ref sorcerySchemas, "sorcerySchemas", LookMode.Deep, this.pawn);
+            Scribe_References.Look(ref pawn, "pawn");
+            Scribe_Collections.Look(ref sorcerySchemas, "sorcerySchemas", LookMode.Deep, new object[]
+            {
+                this.pawn
+            });
+            //Scribe_Collections.Look(ref incompatibleSchemas, "incompatibleSchemas", LookMode.Deep, LookMode.Deep);
         }
 
         public Pawn pawn;
 
         public List<SorcerySchema> sorcerySchemas = new List<SorcerySchema>();
 
-        public List<Tuple<SorcerySchemaDef, SorcerySchemaDef>> incompatibleSchemas = 
-            new List<Tuple<SorcerySchemaDef, SorcerySchemaDef>>();
+        /*public List<Tuple<SorcerySchemaDef, SorcerySchemaDef>> incompatibleSchemas = 
+            new List<Tuple<SorcerySchemaDef, SorcerySchemaDef>>();*/
 
        
     }

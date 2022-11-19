@@ -8,5 +8,9 @@ namespace ItsSorceryFramework
 {
     public class ProgressTracker
     {
+        public virtual void ExposeData()
+        {
+
+        }
     }
 }

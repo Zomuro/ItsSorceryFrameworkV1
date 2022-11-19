@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RimWorld;
 using Verse;
+using Verse.Sound;
 using UnityEngine;
 
 namespace ItsSorceryFramework
@@ -12,6 +13,11 @@ namespace ItsSorceryFramework
     public class EnergyTracker : IExposable
     {
         // initalizer- created via activator via SorcerySchema
+        public EnergyTracker(Pawn pawn)
+        {
+            this.pawn = pawn;
+        }
+
         public EnergyTracker(Pawn pawn, EnergyTrackerDef def) 
         {
             this.pawn = pawn;
@@ -32,8 +38,9 @@ namespace ItsSorceryFramework
 
         public virtual void ExposeData()
         {
-            Scribe_Deep.Look(ref pawn, "pawn");
+            Scribe_References.Look(ref pawn, "pawn");
             Scribe_Defs.Look(ref def, "def");
+            Scribe_Defs.Look(ref sorcerySchemaDef, "sorcerySchemaDef");
             Scribe_Values.Look<float>(ref this.currentEnergy, "currentEnergy", 0f, false);
         }
 
@@ -172,13 +179,35 @@ namespace ItsSorceryFramework
             sorcerySchemaDef.TempPawn = pawn;
 
             Widgets.InfoCardButton(rect.x + 5, rect.y + 5, tempSchemaDef);
+            LearningTrackerButton(rect.x + 5 + 24, rect.y + 5, pawn, sorcerySchemaDef);
             tempSchemaDef.ClearCachedData();
-            //sorcerySchemaDef.TempPawn = null;
 
             // shows the label of the sorcery schema in the itab
             Text.Font = GameFont.Medium;
             Text.Anchor = TextAnchor.UpperCenter;
             Widgets.Label(rect, sorcerySchemaDef.LabelCap.ToString());
+        }
+
+        public bool LearningTrackerButton(float x, float y, Pawn pawn, SorcerySchemaDef schemaDef)
+        {
+            if (cachedLearningTrackers.NullOrEmpty())
+            {
+                cachedLearningTrackers = SorcerySchemaUtility.FindSorcerySchema(pawn, schemaDef).learningTrackers;
+            }
+            if (cachedLearningTrackers.NullOrEmpty()) return false;
+            Rect rect = new Rect(x, y, 24f, 24f);
+            MouseoverSounds.DoRegion(rect);
+            TooltipHandler.TipRegionByKey(rect, "DefInfoTip");
+            //bool result = Widgets.ButtonImage(rect, TexButton.Info, GUI.color, true);
+            UIHighlighter.HighlightOpportunity(rect, "InfoCard");
+
+            if (Widgets.ButtonImage(rect, TexButton.IconBook, GUI.color, true))
+            {
+                Find.TickManager.Pause();
+                Find.WindowStack.Add(new Dialog_LearningTabs(cachedLearningTrackers));
+                return true;
+            }
+            return false;
         }
 
         // used to detect if two values are on different "bars"
@@ -237,6 +266,8 @@ namespace ItsSorceryFramework
         public EnergyTrackerDef def;
 
         public SorcerySchemaDef sorcerySchemaDef;
+
+        public List<LearningTracker> cachedLearningTrackers = new List<LearningTracker>();
 
         public float currentEnergy;
 

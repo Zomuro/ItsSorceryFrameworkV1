@@ -12,6 +12,10 @@ namespace ItsSorceryFramework
     public class EnergyTracker_VancianLifetime : EnergyTracker
     {
         // initalizer- created via activator via SorcerySchema
+        public EnergyTracker_VancianLifetime(Pawn pawn) : base(pawn)
+        {
+        }
+
         public EnergyTracker_VancianLifetime(Pawn pawn, EnergyTrackerDef def) : base(pawn, def)
         {
             currentEnergy = MaxCasts;
@@ -43,7 +47,7 @@ namespace ItsSorceryFramework
         {
             get
             {
-                return (int) this.pawn.GetStatValue(def.energyMaxStatDef ?? StatDefOf_ItsSorcery.MaxEnergy_ItsSorcery, true);
+                return (int) (this.pawn.GetStatValue(def.energyMaxStatDef ?? StatDefOf_ItsSorcery.MaxEnergy_ItsSorcery, true));
             }
         }
 
@@ -51,7 +55,7 @@ namespace ItsSorceryFramework
         {
             get
             {
-                return (int) this.pawn.GetStatValue(def.energyRecoveryStatDef ?? StatDefOf_ItsSorcery.EnergyRecovery_ItsSorcery, true);
+                return (int) (this.pawn.GetStatValue(def.energyRecoveryStatDef ?? StatDefOf_ItsSorcery.EnergyRecovery_ItsSorcery, true));
             }
         }
 

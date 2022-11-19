@@ -48,22 +48,6 @@ namespace ItsSorceryFramework
 
             int possibleSlots = (int) Math.Floor((size.y - 48) / 75f);
             int possiblePages = (int) Math.Ceiling((1f*energyTrackers.CountAllowNull()) / possibleSlots);
-            
-
-            /*if (possiblePages <= 1 || energyTrackers.CountAllowNull() <= possibleSlots)
-            {
-                foreach (EnergyTracker et in energyTrackers)
-                {
-                    et.DrawOnGUI(schemaRect);
-                    schemaRect.y += schemaRect.height + 1;
-                    //view.y += view.height;
-                }
-                Text.Font = GameFont.Small;
-            }
-            else
-            {
-                
-            }*/
 
             int currentPage = energyTrackerIndex / possibleSlots + 1;
             Text.Font = GameFont.Small;

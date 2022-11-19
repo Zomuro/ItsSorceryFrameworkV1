@@ -12,6 +12,10 @@ namespace ItsSorceryFramework
     public class EnergyTracker_Inverted : EnergyTracker
     {
         // initalizer- created via activator via SorcerySchema
+        public EnergyTracker_Inverted(Pawn pawn) : base(pawn)
+        {
+        }
+
         public EnergyTracker_Inverted(Pawn pawn, EnergyTrackerDef def) : base(pawn, def)
         {
         }

@@ -12,6 +12,11 @@ namespace ItsSorceryFramework
 {
     public class Sorcery : Ability
     {
+        public Sorcery(Pawn pawn) : base(pawn)
+        {
+            this.pawn = pawn;
+        }
+
         public Sorcery(Pawn pawn, SorceryDef def) : base(pawn, def)
         {
             this.pawn = pawn;
@@ -22,7 +27,7 @@ namespace ItsSorceryFramework
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Defs.Look<SorceryDef>(ref this.sorceryDef, "sorceryDef");
+            Scribe_Defs.Look(ref this.sorceryDef, "sorceryDef");
         }
 
         public override bool Activate(GlobalTargetInfo target)

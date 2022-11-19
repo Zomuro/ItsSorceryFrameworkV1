@@ -12,6 +12,10 @@ namespace ItsSorceryFramework
     public class EnergyTracker_Vancian : EnergyTracker
     {
         // initalizer- created via activator via SorcerySchema
+        public EnergyTracker_Vancian(Pawn pawn) : base(pawn)
+        {
+        }
+
         public EnergyTracker_Vancian(Pawn pawn, EnergyTrackerDef def) : base(pawn, def)
         {
             InitalizeSorceries();
