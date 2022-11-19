@@ -11,7 +11,7 @@
 		<abilityClass>ItsSorceryFramework.Sorcery</abilityClass>
 		<gizmoClass>ItsSorceryFramework.Command_Sorcery</gizmoClass>
 		<category>Sorcery</category>
-		<sorcerySchema>SorcerySchema_Base4</sorcerySchema>
+		<sorcerySchema>SorcerySchema_Base</sorcerySchema>
 		<defName>testsorcery</defName>
 		<label>test</label>
 		<description>its testing time</description>
